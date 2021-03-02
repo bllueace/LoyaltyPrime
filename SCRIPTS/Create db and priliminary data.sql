@@ -16,6 +16,9 @@ GO
 DROP TABLE IF EXISTS Users
 GO
 
+DROP TABLE IF EXISTS IDCounts
+GO
+
 CREATE TABLE Users (
     UserID int NOT NULL PRIMARY KEY,
     LastName nvarchar(50),
@@ -48,3 +51,10 @@ GO
 INSERT INTO Accounts
 VALUES (1, 1, 'BURGER KING', 125, 5, 'ACTIVE')
 GO
+
+INSERT INTO IDCOunts
+VALUES (1,1)
+GO
+
+
+
