@@ -20,3 +20,4 @@ HOW TO RUN:
         
         
 As this is a proof of concept and not a finished product there are still a number of improvements that can be made.
+I have also left out certain exception handling for readabilities sake as we are under the assumption that the scrip gets run and all relevant data is there.
