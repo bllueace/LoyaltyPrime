@@ -29,11 +29,6 @@ namespace LoyaltyPrime
             DisplayAccounts();
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
         private void newUser_Click(object sender, EventArgs e)
         {
             NewUser newUser = new NewUser();
@@ -56,10 +51,12 @@ namespace LoyaltyPrime
             foreach (DataRow item in dt.Rows)
             {
                 int n = dataGridView1.Rows.Add();
-                dataGridView1.Rows[n].Cells[0].Value = item[0].ToString();
-                dataGridView1.Rows[n].Cells[1].Value = item[1].ToString();
-                dataGridView1.Rows[n].Cells[2].Value = item[2].ToString();
-                dataGridView1.Rows[n].Cells[3].Value = item[3].ToString();
+
+                for (int i = 0; i < item.ItemArray.Length; i++)
+                {
+                   dataGridView1.Rows[n].Cells[i].Value = item[i].ToString();
+                }
+
             }
         }
         //Update the view for when a new user gets added via the second form
@@ -75,14 +72,15 @@ namespace LoyaltyPrime
             foreach (DataRow item in dt.Rows)
             {
                 int n = dataGridView1.Rows.Add();
-                dataGridView1.Rows[n].Cells[0].Value = item[0].ToString();
-                dataGridView1.Rows[n].Cells[1].Value = item[1].ToString();
-                dataGridView1.Rows[n].Cells[2].Value = item[2].ToString();
-                dataGridView1.Rows[n].Cells[3].Value = item[3].ToString();
+
+                for (int i = 0; i < item.ItemArray.Length; i++)
+                {
+                    dataGridView1.Rows[n].Cells[i].Value = item[i].ToString();
+                }
             }
         }
 
-
+        //create a new account for an existing User
         private void newAccount_Click(object sender, EventArgs e)
         {
             NewAccount newAccount = new NewAccount();
@@ -91,6 +89,7 @@ namespace LoyaltyPrime
             newAccount.ShowDialog();
         }
 
+        //load the information stored in the database for viewing
         private void DisplayAccounts()
         {
 
@@ -103,15 +102,16 @@ namespace LoyaltyPrime
             foreach (DataRow item in dt.Rows)
             {
                 int n = dataGridView2.Rows.Add();
-                dataGridView2.Rows[n].Cells[0].Value = item[0].ToString();
-                dataGridView2.Rows[n].Cells[1].Value = item[1].ToString();
-                dataGridView2.Rows[n].Cells[2].Value = item[2].ToString();
-                dataGridView2.Rows[n].Cells[3].Value = item[3].ToString();
-                dataGridView2.Rows[n].Cells[4].Value = item[4].ToString();
-                dataGridView2.Rows[n].Cells[5].Value = item[5].ToString();
+
+
+                for (int i = 0; i < item.ItemArray.Length; i++)
+                {
+                    dataGridView2.Rows[n].Cells[i].Value = item[i].ToString();
+                }
             }
         }
 
+        //refresh the data after a new entry has been made
         void newAccount_FormClosed(object sender, FormClosedEventArgs e)
         {
 
@@ -123,25 +123,46 @@ namespace LoyaltyPrime
             dataGridView2.Rows.Clear();
             foreach (DataRow item in dt.Rows)
             {
-                int n = dataGridView1.Rows.Add();
-                dataGridView2.Rows[n].Cells[0].Value = item[0].ToString();
-                dataGridView2.Rows[n].Cells[1].Value = item[1].ToString();
-                dataGridView2.Rows[n].Cells[2].Value = item[2].ToString();
-                dataGridView2.Rows[n].Cells[3].Value = item[3].ToString();
-                dataGridView2.Rows[n].Cells[4].Value = item[4].ToString();
-                dataGridView2.Rows[n].Cells[5].Value = item[5].ToString();
+                int n = dataGridView2.Rows.Add();
+
+                for (int i = 0; i < item.ItemArray.Length; i++)
+                {
+                    dataGridView2.Rows[n].Cells[i].Value = item[i].ToString();
+                }
             }
         }
 
+        //delete an existing user
         private void deleteUser_Click(object sender, EventArgs e)
         {
-            con.Open();
 
-            SqlCommand sqlCom = new SqlCommand("DELETE FROM Users WHERE UserID =  + '" + userIDTextBox.Text  +"'" , con);
+            try
+            {
+                con.Open();
 
-            sqlCom.ExecuteNonQuery();
+                SqlCommand sqlCom = new SqlCommand("DELETE FROM dbo.Users WHERE UserID =  + '" + userIDTextBox.Text + "'", con);
 
-            con.Close();
+                sqlCom.ExecuteNonQuery();
+
+                con.Close();
+            }
+            catch (SqlException ex)
+            {
+
+                MessageBox.Show("User with one or more accounts can't be deleted!");
+
+                StringBuilder errorMessages = new StringBuilder();
+
+                for (int i = 0; i < ex.Errors.Count; i++)
+                {
+                    errorMessages.Append("Index #" + i + "\n" +
+                        "Message: " + ex.Errors[i].Message + "\n" +
+                        "LineNumber: " + ex.Errors[i].LineNumber + "\n" +
+                        "Source: " + ex.Errors[i].Source + "\n" +
+                        "Procedure: " + ex.Errors[i].Procedure + "\n");
+                }
+                Console.WriteLine(errorMessages.ToString());
+            }
 
             clearTextBox();
 
@@ -156,26 +177,139 @@ namespace LoyaltyPrime
             addressTextBox.Text = dataGridView1.SelectedRows[0].Cells[3].Value.ToString();
         }
 
+        private void dataGridView2_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            AccountIDTextBox.Text = dataGridView2.SelectedRows[0].Cells[0].Value.ToString();
+            userIDTextAccount.Text = dataGridView2.SelectedRows[0].Cells[1].Value.ToString();
+            accountNameTextBox.Text = dataGridView2.SelectedRows[0].Cells[2].Value.ToString();
+            availablePointsTextBox.Text = dataGridView2.SelectedRows[0].Cells[3].Value.ToString();
+            pointsUsedTextBox.Text = dataGridView2.SelectedRows[0].Cells[4].Value.ToString();
+            accountStatusTextBox.Text = dataGridView2.SelectedRows[0].Cells[5].Value.ToString();
+        }
+
+
         //clear textboxes as needeed.
         private void clearTextBox()
         {
+            //clear user text boxes
             userIDTextBox.Clear();
             firstNameTextBox.Clear();
             lastNameTextBox.Clear();
             addressTextBox.Clear();
+
+            //clear account text boxes
+            userIDTextAccount.Clear();
+            AccountIDTextBox.Clear();
+            accountNameTextBox.Clear();
+            accountStatusTextBox.Clear();
+            pointsUsedTextBox.Clear();
+            availablePointsTextBox.Clear();
+
         }
 
-        /*        private int getNrAccounts(int userID)
+        //delete existing account
+        private void deleteAccount_Click(object sender, EventArgs e)
+        {
+            con.Open();
+
+            SqlCommand sqlCom = new SqlCommand("DELETE FROM dbo.Accounts WHERE AccountID =  + '" + AccountIDTextBox.Text + "'", con);
+
+            sqlCom.ExecuteNonQuery();
+
+            con.Close();
+
+            clearTextBox();
+
+            DisplayAccounts();
+        }
+
+        //add points to the selected account
+        private void addPoints_Click(object sender, EventArgs e)
+        {
+
+            if (checkAccountStatus())
+            {
+                con.Open();
+
+                SqlCommand sqlCom = new SqlCommand("UPDATE dbo.Accounts SET PointsAvailable = '" + (Int32.Parse(availablePointsTextBox.Text) + 100) + "'" + " WHERE AccountID =  + '" + AccountIDTextBox.Text + "'", con);
+
+                sqlCom.ExecuteNonQuery();
+
+                con.Close();
+
+                clearTextBox();
+
+                DisplayAccounts();
+            }
+            else
+            {
+                MessageBox.Show("The user account is INACTIVE and as such no points can be added. \nPlease activate the account in order to add points.");
+            }
+
+        }
+        //check for the acounts active status
+        private bool checkAccountStatus()
+        {
+            if (accountStatusTextBox.Text.Equals("ACTIVE"))
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+
+        //actiave or deactivate existign accounts
+        private void ToggleStatus_Click(object sender, EventArgs e)
+        {
+            con.Open();
+
+            if (checkAccountStatus())
+            {
+                SqlCommand sqlCom = new SqlCommand("UPDATE dbo.Accounts SET AccStatus = 'INACTIVE'" + " WHERE AccountID =  + '" + AccountIDTextBox.Text + "'", con);
+                sqlCom.ExecuteNonQuery();
+            }
+            else
+            {
+                SqlCommand sqlCom = new SqlCommand("UPDATE dbo.Accounts SET AccStatus = 'ACTIVE'" + " WHERE AccountID =  + '" + AccountIDTextBox.Text + "'", con);
+                sqlCom.ExecuteNonQuery();
+            }
+
+            con.Close();
+
+            clearTextBox();
+
+            DisplayAccounts();
+        }
+
+        //redeem points from a selected account.
+        private void usePoints_Click(object sender, EventArgs e)
+        {
+            if (checkAccountStatus() && (Int32.Parse(availablePointsTextBox.Text) >= 100))
+            {
+                con.Open();
+
+                SqlCommand sqlCom = new SqlCommand("UPDATE dbo.Accounts SET PointsAvailable = '" + (Int32.Parse(availablePointsTextBox.Text) - 125) + "'" + " WHERE AccountID =  + '" + AccountIDTextBox.Text + "'", con);
+
+                sqlCom.ExecuteNonQuery();
+
+                con.Close();
+
+                clearTextBox();
+
+                DisplayAccounts();
+            }
+            else
+            {
+                if (!checkAccountStatus())
                 {
-                    con.Open();
+                    MessageBox.Show("The user account is INACTIVE and as such no points can be removed. \nPlease activate the account in order to add points.");
+                }
+                else
+                {
+                    MessageBox.Show("The user has insufficient points for redemption.");
+                }
 
-                    SqlCommand sqlCom = new SqlCommand("SELECT NrAccounts FROM dbo.Users WHERE UserID = " + userID, con);
-
-                    int nrAccounts = (int)sqlCom.ExecuteNonQuery();
-
-                    con.Close();
-
-                    return nrAccounts;
-                }*/
+            }
+        }
     }
 }

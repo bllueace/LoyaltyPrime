@@ -20,7 +20,7 @@ namespace LoyaltyPrime
         {
             InitializeComponent();
         }
-
+        //create a new User account
         private void createNewUser_Click(object sender, EventArgs e)
         {
             try
@@ -35,6 +35,13 @@ namespace LoyaltyPrime
 
 
                 sqlCom.ExecuteNonQuery();
+
+                SqlCommand com = new SqlCommand(@"DECLARE @IncrementValue int
+                    SET @IncrementValue = 1
+                    UPDATE dbo.IDCounts SET nextUserID = nextUserID + @IncrementValue", con);
+
+
+                com.ExecuteNonQuery();
 
                 con.Close();
 
@@ -60,7 +67,7 @@ namespace LoyaltyPrime
         //get the next available primary key
         private int getNextPRkey(String tableName)
         {
-            SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Users", con);
+            SqlCommand cmd = new SqlCommand("SELECT nextUserID FROM IDCounts", con);
             Int32 count = (Int32)cmd.ExecuteScalar();
 
             return ++count;

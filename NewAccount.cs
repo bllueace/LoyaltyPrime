@@ -25,7 +25,7 @@ namespace LoyaltyPrime
         //get the next available primary key
         private int getNextPRkey(String tableName)
         {
-            SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM Users", con);
+            SqlCommand cmd = new SqlCommand("SELECT nextAccountID FROM dbo.IDCounts", con);
             Int32 count = (Int32)cmd.ExecuteScalar();
 
             return ++count;
@@ -43,10 +43,10 @@ namespace LoyaltyPrime
             foreach (DataRow item in dt.Rows)
             {
                 int n = dataGridView1.Rows.Add();
-                dataGridView1.Rows[n].Cells[0].Value = item[0].ToString();
-                dataGridView1.Rows[n].Cells[1].Value = item[1].ToString();
-                dataGridView1.Rows[n].Cells[2].Value = item[2].ToString();
-                dataGridView1.Rows[n].Cells[3].Value = item[3].ToString();
+                for (int i = 0; i < item.ItemArray.Length; i++)
+                {
+                    dataGridView1.Rows[n].Cells[i].Value = item[i].ToString();
+                }
             }
         }
         private void filterTextBox_TextChanged(object sender, EventArgs e)
@@ -60,28 +60,37 @@ namespace LoyaltyPrime
             foreach (DataRow item in dt.Rows)
             {
                 int n = dataGridView1.Rows.Add();
-                dataGridView1.Rows[n].Cells[0].Value = item[0].ToString();
-                dataGridView1.Rows[n].Cells[1].Value = item[1].ToString();
-                dataGridView1.Rows[n].Cells[2].Value = item[2].ToString();
-                dataGridView1.Rows[n].Cells[3].Value = item[3].ToString();
+                for (int i = 0; i < item.ItemArray.Length; i++)
+                {
+                    dataGridView1.Rows[n].Cells[i].Value = item[i].ToString();
+                }
             }
         }
 
+        //create a new account
         private void createNewAccount_Click(object sender, EventArgs e)
         {
                         try
             {
                 con.Open();
 
-                SqlCommand sqlCom = new SqlCommand(@"INSERT INTO Accounts 
+                SqlCommand sqlCom = new SqlCommand(@"INSERT INTO dbo.Accounts 
                     VALUES('" + getNextPRkey("Users") + "'" +
-                        ", '" + accountNameComboxBox.Text + "'" +
-                        ", '" + accountNameComboxBox.Text + "'" +
+                        ", '" + userIDTextBox.Text + "'" +
+                        ", '" + acountNameComboxBox.Text + "'" +
                         ", '" + pointsTextBox.Text + "'" +
+                        ", '" + 0 + "'" +
                         ", '" + acountStatusComboBox.Text + "')", con);
 
 
                 sqlCom.ExecuteNonQuery();
+
+                SqlCommand com = new SqlCommand(@"DECLARE @IncrementValue int
+                    SET @IncrementValue = 1
+                    UPDATE dbo.IDCounts SET nextAccountID = nextAccountID + @IncrementValue", con);
+
+
+                com.ExecuteNonQuery();
 
                 con.Close();
 
@@ -104,11 +113,17 @@ namespace LoyaltyPrime
             this.Close();
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        { 
+        private void cancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
             userIDTextBox.Text = dataGridView1.SelectedRows[0].Cells[0].Value.ToString();
             firstNameTextBox.Text = dataGridView1.SelectedRows[0].Cells[1].Value.ToString();
             lastNameTextBox.Text = dataGridView1.SelectedRows[0].Cells[2].Value.ToString();
         }
+
     }
 }
