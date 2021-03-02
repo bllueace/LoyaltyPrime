@@ -1,0 +1,12 @@
+C:\Users\edgar\source\repos\LoyaltyPrime\LoyaltyPrime\bin\Debug\LoyaltyPrime.exe.config
+C:\Users\edgar\source\repos\LoyaltyPrime\LoyaltyPrime\bin\Debug\LoyaltyPrime.exe
+C:\Users\edgar\source\repos\LoyaltyPrime\LoyaltyPrime\bin\Debug\LoyaltyPrime.pdb
+C:\Users\edgar\source\repos\LoyaltyPrime\LoyaltyPrime\obj\Debug\LoyaltyPrime.csprojAssemblyReference.cache
+C:\Users\edgar\source\repos\LoyaltyPrime\LoyaltyPrime\obj\Debug\LoyaltyPrime.LoyaltyPrime.resources
+C:\Users\edgar\source\repos\LoyaltyPrime\LoyaltyPrime\obj\Debug\LoyaltyPrime.Properties.Resources.resources
+C:\Users\edgar\source\repos\LoyaltyPrime\LoyaltyPrime\obj\Debug\LoyaltyPrime.csproj.GenerateResource.cache
+C:\Users\edgar\source\repos\LoyaltyPrime\LoyaltyPrime\obj\Debug\LoyaltyPrime.csproj.CoreCompileInputs.cache
+C:\Users\edgar\source\repos\LoyaltyPrime\LoyaltyPrime\obj\Debug\LoyaltyPrime.exe
+C:\Users\edgar\source\repos\LoyaltyPrime\LoyaltyPrime\obj\Debug\LoyaltyPrime.pdb
+C:\Users\edgar\source\repos\LoyaltyPrime\LoyaltyPrime\obj\Debug\LoyaltyPrime.NewUser.resources
+C:\Users\edgar\source\repos\LoyaltyPrime\LoyaltyPrime\obj\Debug\LoyaltyPrime.NewAccount.resources
